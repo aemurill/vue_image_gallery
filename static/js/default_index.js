@@ -62,6 +62,7 @@ var app = function() {
 
     self.upload_complete = function(get_url) {
         // Hides the uploader div.
+        self.vue.show_img = true;
         self.close_uploader();
         console.log('The file was uploaded; it is now available at ' + get_url);
         // TODO: The file is uploaded.  Now you have to insert the get_url into the database, etc.
@@ -75,6 +76,7 @@ var app = function() {
         data: {
             is_uploading: false,
             img_url: null,
+            show_img: false,
             self_page: true // Leave it to true, so initially you are looking at your own images.
         },
         methods: {
