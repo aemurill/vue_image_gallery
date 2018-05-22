@@ -41,11 +41,7 @@ var app = function() {
 
         if (file) {
             reader.readAsDataURL(file);
-        }
-
-
-        if (false) {
-            // First, gets an upload URL.
+            // Gets an upload URL.
             console.log("Trying to get the upload url");
             $.getJSON('https://upload-dot-luca-teaching.appspot.com/start/uploader/get_upload_url',
                 function (data) {
