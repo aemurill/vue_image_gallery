@@ -33,7 +33,18 @@ var app = function() {
         // Reads the file.
         var input = event.target;
         var file = input.files[0];
+        var reader = new FileReader();
+
+        reader.addEventListener("load", function () {
+            self.vue.img_url = reader.result;
+        }, false);
+
         if (file) {
+            reader.readAsDataURL(file);
+        }
+
+
+        if (false) {
             // First, gets an upload URL.
             console.log("Trying to get the upload url");
             $.getJSON('https://upload-dot-luca-teaching.appspot.com/start/uploader/get_upload_url',
@@ -67,6 +78,7 @@ var app = function() {
         unsafeDelimiters: ['!{', '}'],
         data: {
             is_uploading: false,
+            img_url: null,
             self_page: true // Leave it to true, so initially you are looking at your own images.
         },
         methods: {
