@@ -33,13 +33,23 @@ var app = function() {
         // Reads the file.
         var input = event.target;
         var file = input.files[0];
+        // We want to read the image file, and transform it into a data URL.
         var reader = new FileReader();
 
+        // We add a listener for the load event of the file reader.
+        // The listener is called when loading terminates.
+        // Once loading (the reader.readAsDataURL) terminates, we have
+        // the data URL available. 
         reader.addEventListener("load", function () {
+            // An image can be represented as a data URL.
+            // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
+            // Here, we set the data URL of the image contained in the file to an image in the
+            // HTML, causing the display of the file image.
             self.vue.img_url = reader.result;
         }, false);
 
         if (file) {
+            // Reads the file as a data URL.
             reader.readAsDataURL(file);
             // Gets an upload URL.
             console.log("Trying to get the upload url");
