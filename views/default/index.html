@@ -52,10 +52,8 @@
         <table class="fill" id="user_selector">
           <tbody>
             <tr v-for="user in userlist" class="center">
-              <!-- This row is you; code for getting your own images, and for setting self_page -->
               <td v-on:click="get_user_images(user.id)" >${user.first_name} ${user.last_name}</td>
             </tr>
-            <!-- Then, one row for each person. -->
           </tbody>
         </table>
 
