@@ -6,7 +6,7 @@
 <script>
   // Define your URLs here.
   var add_image_url = "{{=URL('api', 'add_image', user_signature=True)}}";
-  var get_user_images_url = "{{=URL('api', 'get_user_images', user_signature=True)}}";
+  var user_images_url = "{{=URL('api', 'get_user_images', user_signature=True)}}";
   var get_users_url = "{{=URL('api', 'get_users', user_signature=True)}}";
   
 </script>
@@ -36,8 +36,13 @@
 
           <ul class="container">
             <li v-for="image in imagelist" class="card lifted padded quarter">
-                <img v-bind:src="image.image_url" height="200px" width="200px" class="padded"/>
+                <img v-bind:src="image.image_url" 
+                    height="200px" width="200px" class="padded"/>
             </li>
+            <li v-if="selection != -1" v-show="imagelist.length == 0">
+                There's nothing in this user's gallery
+            </li>
+            <li v-if="selection == -1" >Select a gallery to view images<li>
           </ul>
         </div>
       </div>

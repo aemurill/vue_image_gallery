@@ -14,14 +14,13 @@ def add_image():
     print('image added')
     # image = db.user_images(image_id)
     # print(image)
-    get_user_images(1L)
-    print()
-    print()
-    print()
-    get_users()
     return
     
-def get_user_images(user_id):
+@auth.requires_login()
+@auth.requires_signature()
+def get_user_images():
+    user_id = request.vars.user_id
+    print('getting user images')
     imagelist = []
     rows = db(db.user_images.created_by == user_id).select()
     for r in rows:
@@ -31,15 +30,27 @@ def get_user_images(user_id):
             created_by = r.created_by,
             image_url = r.image_url,
         )
+        print(t)
         imagelist.append(t)
     
     return response.json(dict(
         imagelist = imagelist,
     ))
-    
+
+@auth.requires_login()
+@auth.requires_signature()
 def get_users():
     userlist = [];
-    rows = db(db.auth_user).select()
+    row = db(db.auth_user.id == auth.user.id).select()
+    for r in row:
+        t = dict(
+            first_name = r.first_name,
+            last_name = r.last_name,
+            email = r.email,
+            id = r.id,
+        )
+    userlist.append(t)
+    rows = db(db.auth_user.id != auth.user.id).select()
     for r in rows:
         # print(r.first_name)
         t = dict(

@@ -86,10 +86,14 @@ var app = function() {
             {
             image_url: get_url,
             },
-            function(data){}
+            function(data){
+                console.log(self.vue.selection);
+                self.vue.get_user_images(self.vue.selection);
+            }
         )
-        console.log(get_url);
-    }
+        // console.log(get_url);
+        
+    };
     
     self.get_users = function(){
         $.getJSON(get_users_url,
@@ -97,15 +101,18 @@ var app = function() {
                 self.vue.userlist = data.userlist;
                 enumerate(self.vue.userlist);
             });
-    }
+    };
     
-    self.get_user_images = function(){
-        $.post(get_user_images_url,
-        {},
-        function(data){}
-        )
-        
-    }
+    self.get_user_images = function(user_id){
+        self.vue.selection = user_id;
+        $.post(user_images_url,
+        {user_id: user_id},
+        function(data){
+            self.vue.imagelist = data.imagelist;
+            enumerate(self.vue.imagelist);
+        }
+        );
+    };
 
     self.vue = new Vue({
         el: "#vue-div",
@@ -116,6 +123,7 @@ var app = function() {
             img_url: null,
             userlist: [],
             imagelist: [],
+            selection: -1,
             show_img: false,
             self_page: true // Leave it to true, so initially you are looking at your own images.
         },
