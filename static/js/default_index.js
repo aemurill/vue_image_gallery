@@ -76,8 +76,36 @@ var app = function() {
         self.close_uploader();
         console.log('The file was uploaded; it is now available at ' + get_url);
         // TODO: The file is uploaded.  Now you have to insert the get_url into the database, etc.
+        self.add_image(get_url);
     };
 
+
+
+    self.add_image = function(get_url){
+        $.post(add_image_url,
+            {
+            image_url: get_url,
+            },
+            function(data){}
+        )
+        console.log(get_url);
+    }
+    
+    self.get_users = function(){
+        $.getJSON(get_users_url,
+            function(data) {
+                self.vue.userlist = data.userlist;
+                enumerate(self.vue.userlist);
+            });
+    }
+    
+    self.get_user_images = function(){
+        $.post(get_user_images_url,
+        {},
+        function(data){}
+        )
+        
+    }
 
     self.vue = new Vue({
         el: "#vue-div",
@@ -86,17 +114,23 @@ var app = function() {
         data: {
             is_uploading: false,
             img_url: null,
+            userlist: [],
+            imagelist: [],
             show_img: false,
             self_page: true // Leave it to true, so initially you are looking at your own images.
         },
         methods: {
             open_uploader: self.open_uploader,
             close_uploader: self.close_uploader,
-            upload_file: self.upload_file
+            upload_file: self.upload_file,
+            add_image: self.add_image,
+            get_users: self.get_users,
+            get_user_images: self.get_user_images,
         }
 
     });
 
+    self.get_users();
     $("#vue-div").show();
 
     return self;

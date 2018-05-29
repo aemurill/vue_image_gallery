@@ -5,20 +5,20 @@
 <script src="{{=URL('static', 'js/vue.js')}}"></script>
 <script>
   // Define your URLs here.
+  var add_image_url = "{{=URL('api', 'add_image', user_signature=True)}}";
+  var get_user_images_url = "{{=URL('api', 'get_user_images', user_signature=True)}}";
+  var get_users_url = "{{=URL('api', 'get_users', user_signature=True)}}";
+  
 </script>
 
 
 {{end}}
 
 <div class="main_content">
-
+  {{if auth.user is not None:}}
   <div id="vue-div" class="display:none">
     <!-- Your code goes here.  Remember to call $("#vue-div").show() once you get the data for the first time. -->
-
     <div class="container padded">
-
-      <img v-if="show_img" v-bind:src="img_url" />
-
       <div class="image_space threequarters">
         <!-- Left part of the page -->
         <div v-if="self_page">
@@ -35,10 +35,9 @@
           <!-- Put here the code to display the images -->
 
           <ul class="container">
-            <!-- The following is an example
-            <li v-for="image in user_images" class="card lifted padded quarter">
-              <img v-bind:src="image.image_src" height="200px" width="200px" class="padded"/>
-            </li> -->
+            <li v-for="image in imagelist" class="card lifted padded quarter">
+                <img v-bind:src="image.image_url" height="200px" width="200px" class="padded"/>
+            </li>
           </ul>
         </div>
       </div>
@@ -47,17 +46,25 @@
         <!-- Right part of the page -->
         <table class="fill" id="user_selector">
           <tbody>
-            <tr class="center">
+            <tr v-for="user in userlist" class="center">
               <!-- This row is you; code for getting your own images, and for setting self_page -->
-              <td>Jane Doe</td>
+              <td v-on:click="get_user_images(user.id)" >${user.first_name} ${user.last_name}</td>
             </tr>
             <!-- Then, one row for each person. -->
           </tbody>
         </table>
 
       </div>
-
+    </div>
   </div>
+  {{else:}}
+  <div>
+    <h1>Please Log In</h1>
+    <h2>This image platform requires an account</h2>
+    <a href="{{=URL('default', 'user')}}" class="btn">Log in!</a>
+    <a href="{{=URL('default', 'user')}}/register" class="btn">Sign up!</a>
+  </div>
+  {{pass}}
 
 </div>
 
