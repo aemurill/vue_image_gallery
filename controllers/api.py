@@ -27,22 +27,26 @@ def get_user_images():
     imagelist = []
     has_more = False
     rows = db(db.user_images.created_by == user_id).select(orderby=~db.user_images.id)
-    for i, r in enumerate(rows):
-        if i < end_idx - start_idx:
-            t = dict(
-                id = r.id,
-                created_on = r.created_on,
-                created_by = r.created_by,
-                image_url = r.image_url,
-            )
-            # print(i)
-            imagelist.append(t)
-        else:
-            has_more = True
+    rcheck = rows.first()
+    if rcheck is not None:
+        for i, r in enumerate(rows):
+            if i < end_idx - start_idx:
+                t = dict(
+                    id = r.id,
+                    created_on = r.created_on,
+                    created_by = r.created_by,
+                    image_url = r.image_url,
+                )
+                # print(i)
+                imagelist.append(t)
+            else:
+                has_more = True
 
-    print('got user images')
-    # print (len(imagelist))
-    print(imagelist[0])
+        print('got user images')
+        # print (len(imagelist))
+        print(imagelist[0])
+    else:
+        print('got no user images')
     return response.json(dict(
         imagelist = imagelist,
         has_more = has_more

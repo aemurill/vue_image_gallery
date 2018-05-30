@@ -120,6 +120,7 @@ var app = function() {
             end_idx: self.vue.get_more_multiple
         },
         function(data){
+            console.log('ended');
             self.vue.imagelist = data.imagelist;
             self.vue.has_more = data.has_more;
             enumerate(self.vue.imagelist);
