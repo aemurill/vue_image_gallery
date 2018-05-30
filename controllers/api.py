@@ -1,4 +1,4 @@
-import tempfile
+import tempfile, time
 
 # Cloud-safe of uuid, so that many cloned servers do not all use the same uuids.
 from gluon.utils import web2py_uuid
@@ -19,6 +19,7 @@ def add_image():
 @auth.requires_login()
 @auth.requires_signature()
 def get_user_images():
+    time.sleep(1)
     user_id = request.vars.user_id
     start_idx = int(request.vars.start_idx)
     end_idx = int(request.vars.end_idx)
@@ -41,6 +42,7 @@ def get_user_images():
 
     print('got user images')
     # print (len(imagelist))
+    print(imagelist[0])
     return response.json(dict(
         imagelist = imagelist,
         has_more = has_more

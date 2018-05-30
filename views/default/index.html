@@ -26,7 +26,7 @@
             Upload an image file: <input id="file_input" type="file" v-on:change="upload_file" accept="image/jpeg">
           </div>
 
-          <button v-if="!is_uploading" v-on:click="open_uploader"><i class="fa fa-plus"></i></button>
+          <button v-if="!is_uploading" v-on:click="open_uploader">Add Image <i class="fa fa-plus"></i></button>
           <button v-if="is_uploading"  v-on:click="close_uploader">Cancel</button>
         </div>
 
@@ -38,16 +38,22 @@
                     height="200px" width="200px" class="padded" id="image" />
             </li>
             
+            
+            <li v-if="add_image_pending">
+                <p>Loading Gallery <i  class="fa fa-spinner fa-pulse"></i></p>
+            <li>
             <li v-if="!add_image_pending" v-show="imagelist.length == 0">
                 There's nothing in this user's gallery
             </li>
+            
           </ul>
         </div>
-        <button v-if="has_more"  v-on:click="get_more">Get More?</button>
+        <button v-if="!add_image_pending && has_more"  v-on:click="get_more">Get More?</button>
       </div>
 
       <div class="user_space quarter right">
         <!-- Right part of the page -->
+        <p><b>Click on a Name to view a gallery</b></p>
         <table class="fill" id="user_selector">
           <tbody>
             <tr v-for="user in userlist" class="center">

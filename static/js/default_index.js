@@ -72,7 +72,6 @@ var app = function() {
 
     self.upload_complete = function(get_url) {
         // Hides the uploader div.
-        self.vue.show_img = true;
         self.close_uploader();
         console.log('The file was uploaded; it is now available at ' + get_url);
         // TODO: The file is uploaded.  Now you have to insert the get_url into the database, etc.
@@ -87,7 +86,7 @@ var app = function() {
             image_url: get_url,
             },
             function(data){
-                console.log(self.vue.selection);
+                console.log(get_url)
                 self.vue.get_user_images(self.vue.auth_id);
             }
         )
@@ -125,7 +124,7 @@ var app = function() {
             self.vue.has_more = data.has_more;
             enumerate(self.vue.imagelist);
             self.vue.add_image_pending = false;
-            $("#vue-div").show();
+            
         }
         );
     };
@@ -160,7 +159,7 @@ var app = function() {
             imagelist: [],
             has_more: false,
             last_selection: null,
-            add_image_pending: false,
+            add_image_pending: true,
             self_page: true,
             auth_id: -1,
             get_more_multiple: 20,
@@ -178,6 +177,7 @@ var app = function() {
     });
 
     self.get_users();
+    $("#vue-div").show();
     
     return self;
 };
