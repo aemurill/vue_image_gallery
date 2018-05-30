@@ -32,18 +32,18 @@
 
         <div class="image_container">
           <!-- Put here the code to display the images -->
-
           <ul class="container">
-            <li v-for="image in imagelist" class="card lifted padded quarter">
+            <li v-if="!add_image_pending" v-show="imagelist.length != 0" v-for="image in imagelist" class="card lifted padded quarter">
                 <img v-bind:src="image.image_url" 
-                    height="200px" width="200px" class="padded"/>
+                    height="200px" width="200px" class="padded" id="image" />
             </li>
-            <li v-if="selection != -1" v-show="imagelist.length == 0">
+            
+            <li v-if="!add_image_pending" v-show="imagelist.length == 0">
                 There's nothing in this user's gallery
             </li>
-            <li v-if="selection == -1" >Select a gallery to view images<li>
           </ul>
         </div>
+        <button v-if="has_more"  v-on:click="get_more">Get More?</button>
       </div>
 
       <div class="user_space quarter right">
@@ -51,10 +51,18 @@
         <table class="fill" id="user_selector">
           <tbody>
             <tr v-for="user in userlist" class="center">
-              <td v-on:click="get_user_images(user.id)" >${user.first_name} ${user.last_name}</td>
+              <td v-on:click="get_user_images(user.id)" >
+              <h6>${user.first_name} ${user.last_name}</h6>
+              </td>
+            <tr v-if="add_image_pending" class = "green">
+              <td>
+              <p>Loading Gallery <i  class="fa fa-spinner fa-pulse"></i></p>
+              </td>
+            </tr>
             </tr>
           </tbody>
         </table>
+        
       </div>
     </div>
   </div>

@@ -88,7 +88,7 @@ var app = function() {
             },
             function(data){
                 console.log(self.vue.selection);
-                self.vue.get_user_images(self.vue.selection);
+                self.vue.get_user_images(self.vue.auth_id);
             }
         )
         // console.log(get_url);
@@ -96,23 +96,58 @@ var app = function() {
     };
     
     self.get_users = function(){
+        //This function only ever called on page load
         $.getJSON(get_users_url,
             function(data) {
                 self.vue.userlist = data.userlist;
+                self.vue.auth_id = data.auth_id;
                 enumerate(self.vue.userlist);
+                self.get_user_images(self.vue.auth_id);
             });
     };
     
     self.get_user_images = function(user_id){
-        self.vue.selection = user_id;
+        self.vue.add_image_pending = true;
+        self.vue.self_page = false;
+        if (self.vue.auth_id == user_id){
+            self.vue.self_page = true;
+        }
+        self.vue.last_selection = user_id;
+        self.vue.end_idx = self.vue.get_more_multiple;
         $.post(user_images_url,
-        {user_id: user_id},
+        {
+            user_id: user_id,
+            start_idx: 0,
+            end_idx: self.vue.get_more_multiple
+        },
         function(data){
             self.vue.imagelist = data.imagelist;
+            self.vue.has_more = data.has_more;
             enumerate(self.vue.imagelist);
+            self.vue.add_image_pending = false;
+            $("#vue-div").show();
         }
         );
     };
+    
+    self.get_more = function(){
+        user_id = self.vue.last_selection;
+        self.vue.add_image_pending = true;
+        self.vue.end_idx = self.vue.end_idx + self.vue.get_more_multiple;
+        $.post(user_images_url,
+        {
+            user_id: user_id,
+            start_idx: 0,
+            end_idx: self.vue.end_idx,
+        },
+        function(data){
+            self.extend(self.vue.imagelist, data.imagelist);
+            self.vue.has_more = data.has_more;
+            enumerate(self.vue.imagelist);
+            self.vue.add_image_pending = false;
+        }
+        );
+    }
 
     self.vue = new Vue({
         el: "#vue-div",
@@ -123,9 +158,12 @@ var app = function() {
             img_url: null,
             userlist: [],
             imagelist: [],
-            selection: -1,
-            show_img: false,
-            self_page: true // Leave it to true, so initially you are looking at your own images.
+            has_more: false,
+            last_selection: null,
+            add_image_pending: false,
+            self_page: true,
+            auth_id: -1,
+            get_more_multiple: 20,
         },
         methods: {
             open_uploader: self.open_uploader,
@@ -134,13 +172,13 @@ var app = function() {
             add_image: self.add_image,
             get_users: self.get_users,
             get_user_images: self.get_user_images,
+            get_more: self.get_more,
         }
 
     });
 
     self.get_users();
-    $("#vue-div").show();
-
+    
     return self;
 };
 

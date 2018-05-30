@@ -26,6 +26,11 @@ button:disabled:hover {
   box-shadow: none;
 }
 
+/* line 23, ../sass/_main.scss */
+img#image {
+  margin: auto;
+}
+
 /* line 1, ../sass/_navbar.scss */
 .navbar-inverse {
   background-color: #dddddd;

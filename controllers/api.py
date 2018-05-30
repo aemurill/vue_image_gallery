@@ -20,27 +20,38 @@ def add_image():
 @auth.requires_signature()
 def get_user_images():
     user_id = request.vars.user_id
+    start_idx = int(request.vars.start_idx)
+    end_idx = int(request.vars.end_idx)
     print('getting user images')
     imagelist = []
-    rows = db(db.user_images.created_by == user_id).select()
-    for r in rows:
-        t = dict(
-            id = r.id,
-            created_on = r.created_on,
-            created_by = r.created_by,
-            image_url = r.image_url,
-        )
-        print(t)
-        imagelist.append(t)
-    
+    has_more = False
+    rows = db(db.user_images.created_by == user_id).select(orderby=~db.user_images.id)
+    for i, r in enumerate(rows):
+        if i < end_idx - start_idx:
+            t = dict(
+                id = r.id,
+                created_on = r.created_on,
+                created_by = r.created_by,
+                image_url = r.image_url,
+            )
+            # print(i)
+            imagelist.append(t)
+        else:
+            has_more = True
+
+    print('got user images')
+    # print (len(imagelist))
     return response.json(dict(
         imagelist = imagelist,
+        has_more = has_more
     ))
 
 @auth.requires_login()
 @auth.requires_signature()
 def get_users():
-    userlist = [];
+    print('getting users')
+    auth_id = auth.user.id
+    userlist = []
     row = db(db.auth_user.id == auth.user.id).select()
     for r in row:
         t = dict(
@@ -60,8 +71,9 @@ def get_users():
             id = r.id,
         )
         userlist.append(t)
-    print(userlist)
+    print('got users')
     return response.json(dict(
         userlist = userlist,
+        auth_id = auth_id,
     ))
     
