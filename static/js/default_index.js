@@ -112,7 +112,6 @@ var app = function() {
             self.vue.self_page = true;
         }
         self.vue.last_selection = user_id;
-        self.vue.end_idx = self.vue.get_more_multiple;
         $.post(user_images_url,
         {
             user_id: user_id,
@@ -133,12 +132,15 @@ var app = function() {
     self.get_more = function(){
         user_id = self.vue.last_selection;
         self.vue.add_image_pending = true;
-        self.vue.end_idx = self.vue.end_idx + self.vue.get_more_multiple;
+        var num_images = self.vue.imagelist.length;
+        console.log(num_images)
+        var end_idx = num_images + self.vue.get_more_multiple;
+        console.log(end_idx)
         $.post(user_images_url,
         {
             user_id: user_id,
-            start_idx: 0,
-            end_idx: self.vue.end_idx,
+            start_idx: num_images,
+            end_idx: end_idx,
         },
         function(data){
             self.extend(self.vue.imagelist, data.imagelist);

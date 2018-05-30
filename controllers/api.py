@@ -23,10 +23,13 @@ def get_user_images():
     user_id = request.vars.user_id
     start_idx = int(request.vars.start_idx)
     end_idx = int(request.vars.end_idx)
+    print(start_idx)
+    print(end_idx)
     print('getting user images')
     imagelist = []
     has_more = False
-    rows = db(db.user_images.created_by == user_id).select(orderby=~db.user_images.id)
+    rows = db(db.user_images.created_by == user_id).select(orderby=~db.user_images.id,
+                                                           limitby=(start_idx, end_idx + 1))
     rcheck = rows.first()
     if rcheck is not None:
         for i, r in enumerate(rows):
@@ -37,7 +40,7 @@ def get_user_images():
                     created_by = r.created_by,
                     image_url = r.image_url,
                 )
-                # print(i)
+                print(i)
                 imagelist.append(t)
             else:
                 has_more = True
